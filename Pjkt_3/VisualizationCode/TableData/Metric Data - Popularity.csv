@@ -1,0 +1,35 @@
+Library,Popularity Count
+junit4,56201
+testng,3846
+slf4j,18194
+log4j2,16823
+logback,907
+commons logging,9587
+tinylog,9
+blitz4j,8
+minlog,118
+guava,13236
+commons lang,17714
+mockito,5380
+easymock,1998
+powermock,716
+jmock,1073
+bouncycastle,1962
+commons crypto,0
+conceal,2
+chimera,0
+spongycastle,82
+keyczar,28
+conscrypt,10
+gson,8480
+json.simple,2595
+h2,790
+derby,410
+shiro,603
+spring security,3470
+hibernate orm,12806
+mybatis3,1000
+ormlite,504
+xerces2-j,1150
+dom4j,2359
+jdom,3161

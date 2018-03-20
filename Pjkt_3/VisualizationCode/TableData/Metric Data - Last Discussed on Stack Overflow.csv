@@ -1,0 +1,35 @@
+Library,Last Discussed on Stack Overflow (YYYY-MM-DD),Number of Questions Asked in Stack Overflow
+junit4,2018-02-20,17789
+testng,2018-02-20,5289
+slf4j,2018-02-20,2240
+log4j2,2018-02-19,7356
+logback,2018-02-20,2353
+commons logging,2018-01-16,200
+tinylog,2018-01-10,12
+blitz4j,Never,0
+minlog,Never,0
+guava,2018-02-19,2814
+commons lang,2017-12-14,65
+mockito,2018-02-20,6178
+easymock,2018-02-15,855
+powermock,2018-02-19,1467
+jmock,2017-12-08,244
+bouncycastle,2018-02-19,2026
+commons crypto,Never,0
+conceal,2015-06-02,12
+chimera,Never,0
+spongycastle,2018-01-17,95
+keyczar,2015-10-02,18
+conscrypt,Never,0
+gson,2018-02-20,6291
+json.simple,2018-02-09,151
+h2,2018-02-20,2580
+derby,2018-02-19,2215
+shiro,2018-02-12,1050
+spring security,2018-02-20,17215
+hibernate orm,2018-02-20,69511
+mybatis3,2018-02-17,2154
+ormlite,2018-02-07,1308
+xerces2-j,2018-01-23,23
+dom4j,2018-01-12,275
+jdom,2018-02-19,445

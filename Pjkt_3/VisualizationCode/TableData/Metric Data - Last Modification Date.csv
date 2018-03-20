@@ -1,0 +1,35 @@
+Library,Last Modification Date (YYYY-MM-DD)
+junit4,2018-02-15
+testng,2018-02-20
+slf4j,2018-01-31
+log4j2,2018-02-20
+logback,2018-02-12
+commons logging,2018-01-08
+tinylog,2018-02-20
+blitz4j,2017-10-17
+minlog,2017-07-07
+guava,2018-02-20
+commons lang,2018-02-14
+mockito,2018-02-19
+easymock,2018-01-02
+powermock,2017-11-03
+jmock,2018-01-07
+bouncycastle,2018-02-16
+commons crypto,2018-01-07
+conceal,2018-01-16
+chimera,2016-04-15
+spongycastle,2018-01-30
+keyczar,2017-02-14
+conscrypt,2018-02-20
+gson,2018-01-03
+json.simple,2014-07-26
+h2,2018-02-20
+derby,2018-02-18
+shiro,2017-07-19
+spring security,2018-02-20
+hibernate orm,2018-02-12
+mybatis3,2018-02-15
+ormlite,2018-02-19
+xerces2-j,2018-02-19
+dom4j,2017-09-16
+jdom,2017-12-27

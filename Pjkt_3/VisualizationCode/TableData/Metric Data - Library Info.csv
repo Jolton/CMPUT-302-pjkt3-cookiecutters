@@ -1,0 +1,35 @@
+Library Name,Github Repository,Domain
+junit4,junit-team/junit4,testing
+testng,cbeust/testng,testing
+slf4j,qos-ch/slf4j,logging
+log4j2,apache/logging-log4j2,logging
+logback,qos-ch/logback,logging
+commons logging,apache/commons-logging,logging
+tinylog,pmwmedia/tinylog,logging
+blitz4j,Netflix/blitz4j,logging
+minlog,EsotericSoftware/minlog,logging
+guava,google/guava,utilities
+commons lang,apache/commons-lang,utilities
+mockito,mockito/mockito,mocking
+easymock,easymock/easymock,mocking
+powermock,powermock/powermock,mocking
+jmock,jmock-developers/jmock-library,mocking
+bouncycastle,bcgit/bc-java,cryptography
+commons crypto,apache/commons-crypto,cryptography
+conceal,facebook/conceal,cryptography
+chimera,intel-hadoop/chimera,cryptography
+spongycastle,rtyley/spongycastle,cryptography
+keyczar,google/keyczar,cryptography
+conscrypt,google/conscrypt,cryptography
+gson,google/gson,json
+json.simple,fangyidong/json-simple,json
+h2,h2database/h2database,databases
+derby,apache/derby,databases
+shiro,apache/shiro,security
+spring security,spring-projects/spring-security,security
+hibernate orm,hibernate/hibernate-orm,object-relational mapping
+mybatis3,mybatis/mybatis-3,object-relational mapping
+ormlite,j256/ormlite-android,object-relational mapping
+xerces2-j,apache/xerces2-j,xml
+dom4j,dom4j/dom4j,xml
+jdom,hunterhacker/jdom,xml
