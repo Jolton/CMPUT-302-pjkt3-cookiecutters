@@ -150,19 +150,24 @@ def parseTables():
             issue.id = issueId
 
             if issueCreationDate != 'None':
-                dateStrs = issueCreationDate.split("-")
-                issue.creationDate = datetime.date(int(dateStrs[0]), int(dateStrs[1]), int(dateStrs[2]))
+                dateStrs = issueCreationDate.replace(' ', '-').replace(':', '-').split("-")
+                issue.creationDate = datetime.datetime(int(dateStrs[0]), int(dateStrs[1]), int(dateStrs[2]), int(dateStrs[3]), int(dateStrs[4]), int(dateStrs[5]))
+                # issue.creationDate = datetime.datetime.strptime(issueCreationDate, "%Y-%m-%d %H:%M:%S")
 
             if issueClosingDate != 'None':
-                dateStrs = issueClosingDate.split("-")
-                issue.closingDate = datetime.date(int(dateStrs[0]), int(dateStrs[1]), int(dateStrs[2]))
+                dateStrs = issueClosingDate.replace(' ', '-').replace(':', '-').split("-")
+                issue.closingDate = datetime.datetime(int(dateStrs[0]), int(dateStrs[1]), int(dateStrs[2]),
+                                                       int(dateStrs[3]), int(dateStrs[4]), int(dateStrs[5]))
 
             if firstComment != 'None':
-                dateStrs = firstComment.split("-")
-                issue.firstCommentDate = datetime.date(int(dateStrs[0]), int(dateStrs[1]), int(dateStrs[2]))
+                dateStrs = firstComment.replace(' ', '-').replace(':', '-').split("-")
+                issue.firstCommentDate = datetime.datetime(int(dateStrs[0]), int(dateStrs[1]), int(dateStrs[2]),
+                                                       int(dateStrs[3]), int(dateStrs[4]), int(dateStrs[5]))
 
             issue.performance = performance == 'Yes'
             issue.security = security == 'Yes'
+
+            library.issues.append(issue)
 
 
     return domains
