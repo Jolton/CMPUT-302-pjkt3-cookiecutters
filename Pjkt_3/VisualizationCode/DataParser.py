@@ -71,6 +71,8 @@ def parseTables():
                     dateStrs = line[i].split("-")
                     library.releaseDates.append(datetime.date(int(dateStrs[0]), int(dateStrs[1]), int(dateStrs[2])))
 
+                library.releaseDates.sort()
+
     # adds last mod data
     with open('TableData/Metric Data - Last Modification Date.csv') as csvfile:
         reader = csv.reader(csvfile)
@@ -107,7 +109,7 @@ def parseTables():
                 for line in data:
                     if line[i] == '':
                         break
-                    library.releaseDates.append((line[0], line[i]))
+                    library.breakingChangesPerRelease.append((line[0], line[i]))
 
 
 
