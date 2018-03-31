@@ -93,7 +93,7 @@ def parseTables():
         reader = csv.reader(csvfile)
 
         header = next(reader)
-        del header[0]
+
         data = []
         for line in reader:
             data.append(line)
@@ -109,7 +109,7 @@ def parseTables():
                 for line in data:
                     if line[i] == '':
                         break
-                    library.breakingChangesPerRelease.append((line[0], line[i]))
+                    library.breakingChangesPerRelease.append((line[0], int(line[i])))
 
 
 

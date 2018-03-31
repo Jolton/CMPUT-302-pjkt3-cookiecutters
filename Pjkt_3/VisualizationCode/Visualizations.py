@@ -106,10 +106,25 @@ class DomainTabPage(tk.Frame):
         self.visualFrames.append(lastModifiedFrame)
         self.tabFrame.add(lastModifiedFrame, text='Last Modified')
 
-        issuesFrame = IssuesGraph(self.tabFrame)
+        issuesFrame = IssueTypeGraph(self.tabFrame)
         self.visualFrames.append(issuesFrame)
-        self.tabFrame.add(issuesFrame, text='Issues')
+        self.tabFrame.add(issuesFrame, text='Issues Types')
 
+        issuesResponseTime = IssueResponseTimeGraph(self.tabFrame)
+        self.visualFrames.append(issuesResponseTime)
+        self.tabFrame.add(issuesResponseTime, text='Issue Response time')
+
+        issuesClossingTime = IssueClosingTimeGraph(self.tabFrame)
+        self.visualFrames.append(issuesClossingTime)
+        self.tabFrame.add(issuesClossingTime, text='Issue Closing time')
+
+        breakingChangesFrame = BackwardsCompatibilityGraph(self.tabFrame)
+        self.visualFrames.append(breakingChangesFrame)
+        self.tabFrame.add(breakingChangesFrame, text='Backwards Compatibility')
+
+        stackOverflowFrame = StackOverflowGraph(self.tabFrame)
+        self.visualFrames.append(stackOverflowFrame)
+        self.tabFrame.add(stackOverflowFrame, text='Stack Overflow')
 
 
     def set_Domain(self, domain):
@@ -206,7 +221,7 @@ class LastModifiedGraph(VisualizationFrame):
         self.canvas.draw()
 
 
-class IssuesGraph(VisualizationFrame):
+class IssueTypeGraph(VisualizationFrame):
 
     def drawGraph(self, domain):
         super().drawGraph(domain)
@@ -261,198 +276,154 @@ class IssuesGraph(VisualizationFrame):
         self.canvas.draw()
 
 
+class IssueResponseTimeGraph(VisualizationFrame):
+    """Draws a side by side bar graph showing the average response time and
+    the number of unanswered issues per library"""
+
+    def __init__(self, parent):
+        VisualizationFrame.__init__(self, parent)
+
+        self.twinAxis = self.axis.twinx()
+
+    def drawGraph(self, domain):
+        super().drawGraph(domain)
+
+        xTicks = []
+        names = []
+        numberUnanswered = []
+        averageResponseTime = []
+
+        for libIndex in range(len(domain.libraries)):
+            xTicks.append(libIndex)
+            names.append(domain.libraries[libIndex].name)
+
+            numberUnanswered.append(0)
+            averageResponseTime.append(datetime.timedelta())
+
+            responseTimes = []
+            for issue in domain.libraries[libIndex].issues:
+                if issue.firstCommentDate == None:
+                    numberUnanswered[libIndex] += 1
+                else:
+                    responseTimes.append(issue.firstCommentDate - issue.creationDate)
+
+            total = datetime.timedelta()
+            for time in responseTimes:
+                total += time
+
+            if len(responseTimes) != 0:
+                ave = total / len(responseTimes)
+                averageResponseTime[libIndex] = ave.seconds/86400
 
 
+        width = 0.4
+        self.axis.tick_params(axis='x', labelrotation=45)
+        self.twinAxis.clear()
+
+        p1 = self.axis.bar(xTicks, averageResponseTime, width=-width, align='edge', color='b', tick_label=names)
+        self.axis.set_ylabel("Response Time (Days)")
+        p2 = self.twinAxis.bar(xTicks, numberUnanswered, width=width, align='edge', color='r')
+        self.twinAxis.set_ylabel("Unanswered Issues")
+        self.twinAxis.legend((p1,p2), ('Average Reponse Time', 'Number of Unanswered issues'))
+        self.canvas.draw()
 
 
-# old code
-# class DomainPage(tk.Frame):
-#
-#     # self.colourButtonSelected =
-#
-#     def __init__(self, parent, controller):
-#         tk.Frame.__init__(self, parent)
-#         self.label = tk.Label(self, text="Page Two")
-#         self.label.pack(pady=10, padx=10, )
-#
-#         button1 = ttk.Button(self, text="Go Home", command = lambda: controller.show_frame(StartPage))
-#         button1.pack()
-#
-#
-#         settingFrame = tk.Frame(self)
-#         settingFrame.pack()
-#
-#         self.settingButtons = {}
-#
-#         buttonComparePopularity = tk.Button(settingFrame, text="Popularity", command= lambda : self.compare_Popurarity())
-#         buttonComparePopularity.pack(side=tk.LEFT)
-#         self.settingButtons['buttonComparePopularity'] = buttonComparePopularity
-#
-#         buttonCompareRelease_Frequency = tk.Button(settingFrame, text="Release Frequency", command= lambda : self.compare_Release_Frequency())
-#         buttonCompareRelease_Frequency.pack(side=tk.LEFT)
-#         self.settingButtons['buttonCompareRelease_Frequency'] = buttonCompareRelease_Frequency
-#
-#         buttonCompareLast_Modification_Date = tk.Button(settingFrame, text="Last Modified", command = lambda : self.compare_Last_Modification())
-#         buttonCompareLast_Modification_Date.pack(side=tk.LEFT)
-#         self.settingButtons['buttonCompareLast_Modification_Date'] = buttonCompareLast_Modification_Date
-#
-#         buttonCompareIssues = tk.Button(settingFrame, text="Issues", command= lambda : self.compare_Issues())
-#         buttonCompareIssues.pack(side=tk.LEFT)
-#         self.settingButtons['buttonCompareIssues'] = buttonCompareIssues
-#
-#         buttonCompareSecurity = tk.Button(settingFrame, text="Set5")
-#         buttonCompareSecurity.pack(side=tk.LEFT)
-#         self.settingButtons['buttonCompareSecurity'] = buttonCompareSecurity
-#
-#
-#         self.f = Figure(figsize=(5, 5), dpi=100)
-#         self.axis = self.f.add_subplot(111)
-#         self.f.subplots_adjust(bottom=0.5)
-#
-#         self.canvas = FigureCanvasTkAgg(self.f, self)
-#         self.canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
-#
-#         # self.canvas.draw()
-#
-#
-#
-#     def set_Domain(self, domain):
-#         self.domain = domain
-#
-#         self.label.config(text=domain.name)
-#
-#         self.compare_Popurarity()
-#
-#
-#     def compare_Popurarity(self):
-#         self.select_button('buttonComparePopularity')
-#
-#         x = []
-#         heights = []
-#         names = []
-#         for i in range(len(self.domain.libraries)):
-#             x.append(i)
-#             heights.append(int(self.domain.libraries[i].popularity))
-#             names.append(self.domain.libraries[i].name)
-#
-#
-#         self.axis.clear()
-#
-#         # print(x)
-#         # print(heights)
-#         # print(names)
-#
-#         self.axis.bar(x, heights, tick_label=names)
-#         self.axis.tick_params(axis='x', labelrotation = 45)
-#
-#         self.canvas.draw()
-#
-#
-#         # print(self.a.get_xticks())
-#
-#     def compare_Release_Frequency(self):
-#         self.select_button('buttonCompareRelease_Frequency')
-#
-#         self.axis.clear()
-#
-#         for library in self.domain.libraries:
-#             years = []
-#             counts = []
-#             for date in library.releaseDates:
-#                 year = datetime.date(date.year, 1, 1)
-#                 if year in years:
-#                     index = years.index(year)
-#                     counts[index] += 1
-#                 else:
-#                     years.append(year)
-#                     counts.append(1)
-#
-#             self.axis.plot_date(matplotlib.dates.date2num(years), counts, ls='solid', label=library.name)
-#
-#         self.axis.legend()
-#         self.canvas.draw()
-#
-#
-#     def compare_Last_Modification(self):
-#         self.select_button('buttonCompareLast_Modification_Date')
-#
-#         self.axis.clear()
-#
-#         for library in self.domain.libraries:
-#             matdate = matplotlib.dates.date2num(library.lastModificationDate)
-#             self.axis.plot_date(matdate, [1], label=library.name)
-#             # self.axis.annotate(xy=(matdate, 1), s=library.name)
-#             # self.axis.axvline(matplotlib.dates.date2num(library.lastModificationDate))
-#
-#         date = matplotlib.dates.date2num(datetime.date.today())
-#         self.axis.axvline(date,color='r')
-#         self.axis.text(date,1,"Today", rotation=90)
-#         # self.axis.legend(bbox_to_anchor=(0.7, -0.5))
-#         self.axis.legend()
-#         self.axis.set_yticks([])
-#         self.canvas.draw()
-#
-#
-#     def compare_Issues(self):
-#         self.select_button('buttonCompareIssues')
-#
-#         self.axis.clear()
-#
-#         x = []
-#         genIssues = []
-#         secIssues = []
-#         perIssues = []
-#         secPlusPerIssues = []
-#         names = []
-#         i = -1
-#         for library in self.domain.libraries:
-#             i += 1
-#             x.append(i)
-#             names.append(library.name)
-#             genIssues.append(0)
-#             secIssues.append(0)
-#             perIssues.append(0)
-#             secPlusPerIssues.append(0)
-#
-#             genCount = 0
-#             secCount = 0
-#             perCount = 0
-#             for issue in library.issues:
-#                 if issue.security:
-#                     secCount += 1
-#                 if issue.performance:
-#                     perCount += 1
-#                 if not issue.security and not issue.performance:
-#                     genCount +=1
-#
-#             total = genCount + secCount + perCount
-#
-#             genIssues[i] = genCount / total * 100
-#             secIssues[i] = secCount / total * 100
-#             perIssues[i] = perCount / total * 100
-#
-#             secPlusPerIssues[i] = secIssues[i] + perIssues[i]
-#
-#
-#
-#
-#         p1 = self.axis.bar(x, perIssues, tick_label=names)
-#         p2 = self.axis.bar(x, secIssues, bottom=perIssues)
-#         p3 = self.axis.bar(x, genIssues, bottom=secPlusPerIssues)
-#         self.axis.legend((p1[0], p2[0], p3[0]), ('Performance', 'Security', 'Generic'))
-#
-#         self.axis.yaxis.set_major_formatter(matplotlib.ticker.PercentFormatter())
-#         self.canvas.draw()
-#
-#
-#
-#
-#
-#     def select_button(self, buttonName):
-#         """Sets only the given buttonName as disabled,(ie selected), and enables all the others"""
-#         for button in self.settingButtons.values():
-#             button.config(state=tk.ACTIVE)
-#         self.settingButtons[buttonName].config(state=tk.DISABLED)
+class IssueClosingTimeGraph(VisualizationFrame):
+
+
+    def __init__(self, parent):
+        VisualizationFrame.__init__(self, parent)
+
+        self.twinAxis = self.axis.twinx()
+
+    def drawGraph(self, domain):
+        super().drawGraph(domain)
+
+        self.twinAxis.clear()
+
+        xTicks = []
+        names = []
+        numberOpen = []
+        averageClosingTime = []
+
+        for libIndex in range(len(domain.libraries)):
+            xTicks.append(libIndex)
+            names.append(domain.libraries[libIndex].name)
+
+            numberOpen.append(0)
+            averageClosingTime.append(datetime.timedelta())
+
+            responseTimes = []
+            for issue in domain.libraries[libIndex].issues:
+                if issue.closingDate == None:
+                    numberOpen[libIndex] += 1
+                else:
+                    responseTimes.append(issue.closingDate - issue.creationDate)
+
+            total = datetime.timedelta()
+            for time in responseTimes:
+                total += time
+
+            if len(responseTimes) != 0:
+                ave = total / len(responseTimes)
+                averageClosingTime[libIndex] = ave.seconds / 86400
+
+        width = 0.4
+        self.axis.tick_params(axis='x', labelrotation=45)
+
+        p1 = self.axis.bar(xTicks, averageClosingTime, width=-width, align='edge', color='b', tick_label=names)
+        self.axis.set_ylabel("Closing Time (Days)")
+        p2 = self.twinAxis.bar(xTicks, numberOpen, width=width, align='edge', color='r')
+        self.twinAxis.set_ylabel("Open Issues")
+        self.twinAxis.legend((p1, p2), ('Average Closing Time', 'Number of Open issues'))
+        self.canvas.draw()
+
+
+class BackwardsCompatibilityGraph(VisualizationFrame):
+
+    def drawGraph(self, domain):
+        super().drawGraph(domain)
+
+        xTicks = []
+        breakingChanges = []
+        names = []
+
+        for idx, library in enumerate(domain.libraries):
+            xTicks.append(idx)
+            names.append(library.name)
+            breakingChanges.append(0)
+
+            for (release, changes) in library.breakingChangesPerRelease:
+                # print(library.name)
+                # print(str(release) + '|' + str(changes))
+                breakingChanges[idx] += changes
+
+            breakingChanges[idx] = breakingChanges[idx] / len(library.breakingChangesPerRelease)
+
+        self.axis.bar(xTicks, breakingChanges, tick_label=names)
+        self.axis.set_ylabel('Average Breaking changes')
+        self.canvas.draw()
+
+
+class StackOverflowGraph(VisualizationFrame):
+    pass
+
+    def drawGraph(self, domain):
+        super().drawGraph(domain)
+
+        for library in domain.libraries:
+            if library.lastDiscussedOnStackOverflow != 'Never':
+                self.axis.plot_date(matplotlib.dates.date2num(library.lastDiscussedOnStackOverflow), [int(library.questionsAsked)] ,label= library.name)
+
+        today = matplotlib.dates.date2num(datetime.date.today())
+        self.axis.axvline(today, color='r')
+        # get the center y value to put the text at
+        self.axis.text(today, 1,  'Today', rotation= 90)
+        self.axis.tick_params(axis='x', labelrotation=45)
+        self.axis.legend()
+        self.canvas.draw()
+
+
 
 
 domains = DataParser.parseTables()
