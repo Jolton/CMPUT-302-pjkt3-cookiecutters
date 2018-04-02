@@ -67,7 +67,7 @@ class StartPage(tk.Frame):
 
     def __init__(self, parent, controller, domains):
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="Start Page")
+        label = tk.Label(self, text="Pick a domain to compare libraries")
         label.pack(pady=10, padx=10)
 
         self.buttons = []
@@ -129,7 +129,7 @@ class DomainTabPage(tk.Frame):
 
     def set_Domain(self, domain):
         self.domain = domain
-        self.label.config(text=self.domain.name)
+        self.label.config(text='Comparing libraries for: ' + self.domain.name)
         for visual in self.visualFrames:
             visual.drawGraph(domain)
 
@@ -173,6 +173,10 @@ class PopularityGraph(VisualizationFrame):
         self.axis.bar(x, heights, tick_label=names)
         self.axis.tick_params(axis='x', labelrotation=45)
 
+        self.axis.set_title(label="The number of projects that use each library")
+        self.axis.set_ylabel('Number of projects')
+        self.axis.set_xlabel('Libraries')
+
         self.canvas.draw()
 
 
@@ -196,6 +200,10 @@ class ReleaseFrequencyGraph(VisualizationFrame):
             self.axis.plot_date(matplotlib.dates.date2num(years), counts, ls='solid', label=library.name)
 
         self.axis.tick_params(axis='x', labelrotation=45)
+
+        self.axis.set_title(label='The number of releases per year for each library')
+        self.axis.set_ylabel('Number of releases')
+        self.axis.set_xlabel('Time')
         self.axis.legend()
         self.canvas.draw()
 
@@ -216,6 +224,9 @@ class LastModifiedGraph(VisualizationFrame):
         self.axis.text(date,1,"Today", rotation=90)
         # self.axis.legend(bbox_to_anchor=(0.7, -0.5))
         self.axis.tick_params(axis='x', labelrotation=45)
+
+        self.axis.set_title('The last time each library was modified')
+        self.axis.set_xlabel("Time")
         self.axis.legend()
         self.axis.set_yticks([])
         self.canvas.draw()
@@ -273,6 +284,10 @@ class IssueTypeGraph(VisualizationFrame):
 
         self.axis.yaxis.set_major_formatter(matplotlib.ticker.PercentFormatter())
         self.axis.tick_params(axis='x', labelrotation=45)
+
+        self.axis.set_title('Types of Issues per library')
+        self.axis.set_ylabel('Percent of the total issues')
+        self.axis.set_xlabel('Libraries')
         self.canvas.draw()
 
 
@@ -298,7 +313,7 @@ class IssueResponseTimeGraph(VisualizationFrame):
             names.append(domain.libraries[libIndex].name)
 
             numberUnanswered.append(0)
-            averageResponseTime.append(datetime.timedelta())
+            averageResponseTime.append(0)
 
             responseTimes = []
             for issue in domain.libraries[libIndex].issues:
@@ -325,6 +340,9 @@ class IssueResponseTimeGraph(VisualizationFrame):
         p2 = self.twinAxis.bar(xTicks, numberUnanswered, width=width, align='edge', color='r')
         self.twinAxis.set_ylabel("Unanswered Issues")
         self.twinAxis.legend((p1,p2), ('Average Reponse Time', 'Number of Unanswered issues'))
+        self.axis.set_title('Average time to respond to issues and the number of issues that have no response')
+        self.axis.set_xlabel('Libraries')
+
         self.canvas.draw()
 
 
@@ -351,7 +369,7 @@ class IssueClosingTimeGraph(VisualizationFrame):
             names.append(domain.libraries[libIndex].name)
 
             numberOpen.append(0)
-            averageClosingTime.append(datetime.timedelta())
+            averageClosingTime.append(0)
 
             responseTimes = []
             for issue in domain.libraries[libIndex].issues:
@@ -376,6 +394,9 @@ class IssueClosingTimeGraph(VisualizationFrame):
         p2 = self.twinAxis.bar(xTicks, numberOpen, width=width, align='edge', color='r')
         self.twinAxis.set_ylabel("Open Issues")
         self.twinAxis.legend((p1, p2), ('Average Closing Time', 'Number of Open issues'))
+        self.axis.set_title('Average time to close an issue and the number of open issues')
+        self.axis.set_xlabel('Libraries')
+
         self.canvas.draw()
 
 
@@ -402,24 +423,33 @@ class BackwardsCompatibilityGraph(VisualizationFrame):
 
         self.axis.bar(xTicks, breakingChanges, tick_label=names)
         self.axis.set_ylabel('Average Breaking changes')
+        self.axis.set_title('The average number of breaking changes per release')
+        self.axis.set_xlabel('Libraries')
+
         self.canvas.draw()
 
 
 class StackOverflowGraph(VisualizationFrame):
-    pass
 
     def drawGraph(self, domain):
         super().drawGraph(domain)
 
         for library in domain.libraries:
             if library.lastDiscussedOnStackOverflow != 'Never':
+
                 self.axis.plot_date(matplotlib.dates.date2num(library.lastDiscussedOnStackOverflow), [int(library.questionsAsked)] ,label= library.name)
 
         today = matplotlib.dates.date2num(datetime.date.today())
         self.axis.axvline(today, color='r')
-        # get the center y value to put the text at
-        self.axis.text(today, 1,  'Today', rotation= 90)
+
+        (min, max) = self.axis.get_ylim()
+        mid = (max - min)/2  + min
+
+        self.axis.text(today, mid,  'Today', rotation= 90)
         self.axis.tick_params(axis='x', labelrotation=45)
+        self.axis.set_title('The last time a library was disused on stack overflow and the number of questions asked about it')
+        self.axis.set_ylabel('The number of questions')
+        self.axis.set_xlabel('Time last discussed on stack overflow')
         self.axis.legend()
         self.canvas.draw()
 
